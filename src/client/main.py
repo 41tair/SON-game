@@ -8,7 +8,7 @@ import argparse
 encoding = 'utf-8'
 BUFSIZE = 1024
 parser = argparse.ArgumentParser()
-parser.add_argument('--name', default="unmamed player")
+parser.add_argument('--name', default="")
 parser.add_argument('--ip', default="127.0.0.1")
 args = parser.parse_args()
 ip = args.ip
@@ -40,7 +40,7 @@ class Sender(threading.Thread):
             if(data):
                 string = bytes.decode(data, encoding)
                 print(string)
-                string = str(name) + ", " + string
+                string = str(name) + string
                 get_back = myprobe(ip, 6666, string)
                 self.client.send(get_back)
             else:

@@ -41,9 +41,8 @@ class Sender(threading.Thread):
                 string = bytes.decode(data, encoding)
                 print(string)
                 string = str(name) + ", " + string
-                rr = myprobe(ip, 6666, string)
-                print("get {}".format(rr.decode(encoding)))
-                self.client.send('close'.encode(encoding))
+                get_back = myprobe(ip, 6666, string)
+                self.client.send(get_back)
             else:
                 break
         print("close:", self.client.getpeername())

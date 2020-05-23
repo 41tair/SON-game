@@ -10,3 +10,4 @@ while True:
     else:
         s.send(cmd.encode('utf8'))
         print(s.recv(1024).decode(encoding='utf8'))
+    

@@ -54,7 +54,7 @@ def message_handle(client):
             for c in g_conn_pool:
                 send_msg(c, 'a log')
         elif recv_msg == 'close':
-            send_msg(c, 'close the connection')
+            send_msg(client, 'close the connection')
             client.close()
             g_conn_pool.remove(client)
             break

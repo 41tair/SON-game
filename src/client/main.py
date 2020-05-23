@@ -1,6 +1,4 @@
-# Filename: PortListner.py
-# @author: RobinTang
-# Created on 2012-9-5 1:42:05
+#!/usr/bin/env python3
 
 import sys
 import threading
@@ -17,8 +15,9 @@ def myprobe(host,port,payload):
     ADDR = (host,port)
     tcpCliSock = socket(AF_INET,SOCK_STREAM)#创建客户端套接字
     tcpCliSock.connect(ADDR)#尝试连接服务器
-    tcpCliSock.send(payload)#会话（发送/接收）
+    tcpCliSock.send(payload.encode(encoding))#会话（发送/接收）
     data=tcpCliSock.recv(BUFSIZE)
+    tcpCliSock.send('close'.encode(encoding))
     tcpCliSock.close()#关闭客户端套接字
 
     return data
@@ -37,7 +36,8 @@ class Sender(threading.Thread):
             if(data):
                 string = bytes.decode(data, encoding)
                 print(string)
-                myprobe(ip, 666, string)
+                rr = myprobe(ip, 6666, string)
+                print("get {}".format(rr.decode(encoding)))
             else:
                 break
         print("close:", self.client.getpeername())
@@ -72,7 +72,7 @@ class Listener(threading.Thread):
             cltadd = cltadd
             print("accept a connect")
  
-lst  = Listener(9011)   # create a listen thread
+lst  = Listener(12345)   # create a listen thread
 lst.start() # then start
  
 # Now, you can use telnet to test it, the command is "telnet 127.0.0.1 9011"

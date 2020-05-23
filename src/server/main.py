@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import socket
 from time import ctime
@@ -51,7 +50,7 @@ def accept_client():
 def message_handle(client):
     while True:
         recv_msg = client.recv(1024).decode('utf8')
-        if recv_msg == 'test1':
+        if recv_msg == 'test 1':
             for c in g_conn_pool:
                 send_msg(c, 'a log')
         elif recv_msg == 'close':

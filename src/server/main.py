@@ -52,7 +52,9 @@ def message_handle(client):
         recv_msg = client.recv(1024).decode('utf8')
         if recv_msg == 'test 1':
             for c in g_conn_pool:
-                send_msg(c, 'a log')
+                send_msg(c, 'this is a log')
+        elif recv_msg == 'test 2':
+            send_msg(client, '无效')
         elif recv_msg == 'close':
             send_msg(client, 'close the connection')
             client.close()

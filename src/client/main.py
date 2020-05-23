@@ -3,12 +3,16 @@
 import sys
 import threading
 from socket import *
+import argparse
 
 encoding = 'utf-8'
 BUFSIZE = 1024
-
-
-ip = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('--name', default="unmamed player")
+parser.add_argument('--ip', default="127.0.0.1")
+args = parser.parse_args()
+ip = args.ip
+name = args.name
 
 def myprobe(host,port,payload):
     global BUFSIZE
@@ -36,8 +40,10 @@ class Sender(threading.Thread):
             if(data):
                 string = bytes.decode(data, encoding)
                 print(string)
+                string = str(name) + ", " + string
                 rr = myprobe(ip, 6666, string)
                 print("get {}".format(rr.decode(encoding)))
+                self.client.send('close'.encode(encoding))
             else:
                 break
         print("close:", self.client.getpeername())
@@ -71,10 +77,9 @@ class Listener(threading.Thread):
             Sender(client).start()
             cltadd = cltadd
             print("accept a connect")
+
+if __name__ == "__main__":
+    lst  = Listener(12345)   # create a listen thread
+    lst.start() # then start
  
-lst  = Listener(12345)   # create a listen thread
-lst.start() # then start
- 
-# Now, you can use telnet to test it, the command is "telnet 127.0.0.1 9011"
-# You also can use web broswer to test, input the address of "http://127.0.0.1:9011" and press Enter button
-# Enjoy it....
+# use telnet to test: "telnet 127.0.0.1 9011"

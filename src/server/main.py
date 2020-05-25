@@ -1,15 +1,16 @@
-import sys
 import socket
-from time import ctime
 import argparse
 from threading import Thread
+
+from actions import Actions
+
 
 g_conn_pool = []
 g_socket_server = []
 
+
 def send_msg(client, s):
     client.sendall(s.encode('utf8'))
-
 
 
 def init():
@@ -22,7 +23,6 @@ def init():
     args = parser.parse_args()
 
     ADDR = (args.host, args.port)
-    BUFSIZ = 1024
 
     global g_socket_server
     g_socket_server = socket.socket(
@@ -50,19 +50,26 @@ def accept_client():
 def message_handle(client):
     while True:
         recv_msg = client.recv(1024).decode('utf8')
-        if recv_msg == 'test 1':
-            for c in g_conn_pool:
-                send_msg(c, 'this is a log')
-        elif recv_msg == 'test 2':
-            send_msg(client, '无效')
-        elif recv_msg == 'close':
-            send_msg(client, 'close the connection')
+        try:
+            if recv_msg == 'test 1':
+                for c in g_conn_pool:
+                    send_msg(c, 'this is a log')
+            elif recv_msg == 'test 2':
+                send_msg(client, '无效')
+            elif recv_msg == 'close':
+                send_msg(client, 'close the connection')
+                client.close()
+                g_conn_pool.remove(client)
+                break
+            else:
+                action = Actions()
+                msg = action.accept_cmd()
+                send_msg(client, msg)
+        except Exception as e:
+            print(e)
             client.close()
             g_conn_pool.remove(client)
             break
-        else:
-            send_msg(client, 'unusefull msg')
-
 
 
 def main():
@@ -85,7 +92,6 @@ def main():
             g_conn_pool[int(index)].sendall(msg.encode(encoding='utf8'))
         elif cmd == '3':
             exit()
-
 
 
 if __name__ == '__main__':

@@ -2,15 +2,12 @@ import socket
 import argparse
 from threading import Thread
 
-from actions import Actions
+from rooms import create_room, join_room
+from utils import send_msg
 
 
 g_conn_pool = []
 g_socket_server = []
-
-
-def send_msg(client, s):
-    client.sendall(s.encode('utf8'))
 
 
 def init():
@@ -49,27 +46,40 @@ def accept_client():
 
 def message_handle(client):
     while True:
-        recv_msg = client.recv(1024).decode('utf8')
         try:
-            if recv_msg == 'test 1':
-                for c in g_conn_pool:
-                    send_msg(c, 'this is a log')
-            elif recv_msg == 'test 2':
-                send_msg(client, '无效')
-            elif recv_msg == 'close':
+            recv_msg = client.recv(1024).decode('utf8').split(' ')
+            if recv_msg[0] == 'test':
+                if recv_msg[1] == '1':
+                    for c in g_conn_pool:
+                        send_msg(c, 'this is a log')
+                else:
+                    send_msg(client, '无效')
+            elif recv_msg[0] == 'create':
+                _, room_id, client_num = recv_msg
+                create_room(client_num, room_id)
+                join_room(room_id, client)
+                send_msg(client, f'create room{room_id} succefully')
+
+            elif recv_msg[0] == 'join':
+                _, room_id = recv_msg
+                join_room(room_id, client)
+                send_msg(client, f'join room{room_id} succefully')
+
+            elif recv_msg[0] == 'close':
                 send_msg(client, 'close the connection')
                 client.close()
                 g_conn_pool.remove(client)
                 break
             else:
-                action = Actions()
-                msg = action.accept_cmd()
-                send_msg(client, msg)
+                # action = Actions()
+                # msg = action.accept_cmd()
+                send_msg(client, 'msg')
         except Exception as e:
             print(e)
-            client.close()
-            g_conn_pool.remove(client)
-            break
+            send_msg(client, 'Some error happened')
+            # client.close()
+            # g_conn_pool.remove(client)
+            # break
 
 
 def main():

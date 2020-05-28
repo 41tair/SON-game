@@ -9,6 +9,7 @@ rooms = {}
 class Room:
 
     __rooms = {}
+    cmd_dic = {''}
 
     def __init__(self, client_num, room_id=None):
         self.__dict__ = self.__rooms
@@ -39,7 +40,9 @@ class Room:
 
 
 def create_room(client_num, room_id):
-    rooms[room_id] = Room(client_num, room_id)
+    room = Room(client_num, room_id)
+    rooms[room_id] = room
+    return room
 
 
 def join_room(room_id, client):

@@ -2,7 +2,7 @@ import socket
 import argparse
 from threading import Thread
 
-from rooms import create_room, join_room
+from rooms import create_room, join_room, rooms
 from utils import send_msg
 
 
@@ -71,9 +71,9 @@ def message_handle(client):
                 g_conn_pool.remove(client)
                 break
             else:
-                # action = Actions()
-                # msg = action.accept_cmd()
-                send_msg(client, 'msg')
+                # TODO
+                # client传入的参数最好改为--arg value的形式
+                client.accept_cmd(recv_msg[1:])
         except Exception as e:
             print(e)
             send_msg(client, 'Some error happened')

@@ -25,4 +25,9 @@ class Player:
     def put_in_bage(self):
         pass
 
+    def accept_cmd(self, *args):
+        cmd = args[0]
+        if cmd == 'draw':
+            self.in_cards()
+
 

@@ -2,7 +2,7 @@ import socket
 import argparse
 from threading import Thread
 
-from rooms import create_room, join_room, rooms
+from rooms import create_room, join_room
 from utils import send_msg
 
 

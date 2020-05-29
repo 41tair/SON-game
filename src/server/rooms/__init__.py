@@ -9,7 +9,6 @@ rooms = {}
 class Room:
 
     __rooms = {}
-    cmd_dic = {''}
 
     def __init__(self, client_num, room_id=None):
         self.__dict__ = self.__rooms

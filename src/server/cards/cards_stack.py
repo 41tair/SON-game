@@ -1,17 +1,27 @@
+from random import shuffle
+
+
 class BasicCardsStack:
 
     def __init__(self):
-        pass
+        self.cards_stack = []
 
-    def cards_out(self):
-        pass
+    def out_cards(self, nums):
+        tmp = []
+        while nums > 0:
+            tmp.append(self.cards_stack.pop())
+            nums -= 1
+        return tmp
 
-    def cards_in(self):
+    def in_cards(self):
         pass
 
     @property
     def show_cards(self):
         return 'all cards'
+
+    def shuffle(self):
+        shuffle(self.cards_stack)
 
 
 class DumpcardsStack(BasicCardsStack):

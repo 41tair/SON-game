@@ -20,10 +20,12 @@ class Room:
         return f'There are {self.__dict__}'
 
     def add_client(self, client):
-        self.players_pool.append(Player(client, self.room_id))
+        player = Player(client, self.room_id)
+        self.players_pool.append(player)
         self.client_num -= 1
         if self.client_num == 0:
             self.begin()
+        return player
 
     def init_cards_stack(self):
         self.l_cards_stack, \
@@ -34,8 +36,12 @@ class Room:
         print('game begin')
         self.init_cards_stack()
         for p in self.players_pool:
+            p.init_player()
             p.send_msg('game begin')
-            p.init_cards()
+
+    def send_all_players(self, msg):
+        for p in self.players_pool:
+            p.send_msg(msg)
 
 
 def create_room(client_num, room_id):
@@ -45,4 +51,8 @@ def create_room(client_num, room_id):
 
 
 def join_room(room_id, client):
-    rooms[room_id].add_client(client)
+    player = rooms[room_id].add_client(client)
+    return player
+
+def get_room_id():
+    return len(rooms)+1

@@ -2,12 +2,22 @@ import socket
 import argparse
 from threading import Thread
 
-from rooms import create_room, join_room
+from rooms import create_room, join_room, get_room_id
 from utils import send_msg
 
 
 g_conn_pool = []
 g_socket_server = []
+
+parser = argparse.ArgumentParser()
+parser.add_argument('cmd')
+parser.add_argument('--client-num', type=int, default=3)
+parser.add_argument('--room', type=int)
+parser.add_argument('--type')
+parser.add_argument("--show-type")
+parser.add_argument("--left-stack", "-l", type=int)
+parser.add_argument("--middle-stack", "-m", type=int)
+parser.add_argument("--right-stack", "-r", type=int)
 
 
 def init():
@@ -48,35 +58,35 @@ def message_handle(client):
     while True:
         try:
             recv_msg = client.recv(1024).decode('utf8').split(' ')
-            if recv_msg[0] == 'test':
-                if recv_msg[1] == '1':
+            option = parser.parse_args(recv_msg)
+            if option.cmd == 'test':
+                if option.type == '1':
                     for c in g_conn_pool:
                         send_msg(c, 'this is a log')
                 else:
                     send_msg(client, '无效')
-            elif recv_msg[0] == 'create':
-                _, room_id, client_num = recv_msg
+            elif option.cmd == 'create':
+                client_num = option.client_num
+                room_id = get_room_id()
                 create_room(client_num, room_id)
-                join_room(room_id, client)
+                player = join_room(room_id, client)
                 send_msg(client, f'create room{room_id} succefully')
 
-            elif recv_msg[0] == 'join':
-                _, room_id = recv_msg
-                join_room(room_id, client)
+            elif option.cmd == 'join':
+                room_id = option.room
+                player = join_room(room_id, client)
                 send_msg(client, f'join room{room_id} succefully')
 
-            elif recv_msg[0] == 'close':
+            elif option.cmd == 'close':
                 send_msg(client, 'close the connection')
                 client.close()
                 g_conn_pool.remove(client)
                 break
             else:
-                # TODO
-                # client传入的参数最好改为--arg value的形式
-                client.accept_cmd(recv_msg[1:])
+                player.accept_cmd(option)
         except Exception as e:
             print(e)
-            send_msg(client, 'Some error happened')
+            send_msg(client, 'Some error happen')
             # client.close()
             # g_conn_pool.remove(client)
             # break
@@ -101,6 +111,8 @@ def main():
             index, msg = input("请输入“索引,消息”的形式：").split(",")
             g_conn_pool[int(index)].sendall(msg.encode(encoding='utf8'))
         elif cmd == '3':
+            for i in g_conn_pool[int(index)]:
+                i.sendall('close'.encode(encoding='utf8'))
             exit()
 
 

@@ -1,10 +1,13 @@
 from random import shuffle
 
+from cards import get_all_cards
 
-class BasicCardsStack:
+
+class CardsStack:
 
     def __init__(self):
-        self.cards_stack = []
+        self.cards_stack = get_all_cards().copy()
+        self.shuffle()
 
     def out_cards(self, nums):
         tmp = []
@@ -16,40 +19,21 @@ class BasicCardsStack:
     def in_cards(self):
         pass
 
-    @property
     def show_cards(self):
         return 'all cards'
 
     def shuffle(self):
-        shuffle(self.cards_stack)
-
-
-class DumpcardsStack(BasicCardsStack):
-
-    def __init__(self):
-        pass
-
-
-class LeftDumpCardsStack(DumpcardsStack):
-
-    def __init__(self):
-        pass
-
-
-class RightDumpCardsStack(DumpcardsStack):
-
-    def __init__(self):
-        pass
-
-
-class MiddleCardsStack(BasicCardsStack):
-
-    def __init__(self):
-        pass
+        self.cards_stack = shuffle(self.cards_stack)
 
 
 def generate_cards_stack():
-    middle_cards_stack = MiddleCardsStack()
-    left_dump_cards_stack = LeftDumpCardsStack()
-    right_dump_cards_stack = RightDumpCardsStack()
+    middle_cards_stack = get_all_cards().copy()
+    shuffle(middle_cards_stack)
+    left_dump_cards_stack = [middle_cards_stack.pop() for _ in range(5)]
+    right_dump_cards_stack = [middle_cards_stack.pop() for _ in range(5)]
     return left_dump_cards_stack, middle_cards_stack, right_dump_cards_stack
+
+
+if __name__ == "__main__":
+    m = generate_cards_stack()
+    print(m)

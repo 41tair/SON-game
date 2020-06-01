@@ -3,7 +3,7 @@ from random import shuffle
 from cards import get_all_cards
 
 
-class CardsStack:
+class CardsStack(list):
 
     def __init__(self):
         self.cards_stack = get_all_cards().copy()
@@ -35,5 +35,5 @@ def generate_cards_stack():
 
 
 if __name__ == "__main__":
-    m = generate_cards_stack()
+    l, m, r = generate_cards_stack()
     print(m)

@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractclassmethod
 
+
 class BasicCard:
     def __init__(self):
         self.name = None
@@ -9,6 +10,7 @@ class BasicCard:
 
     def __repr__(self):
         return self.name
+
 
 class Apple(BasicCard):
 
@@ -103,6 +105,7 @@ silk = Silk()
 
 def get_all_cards():
     return [apple]*48+[chess]*36+[bread]*36+[hen]*24+[peppercorn]*22+[metheglin]*21+[silk]*12+[crossbow]*5
+
 
 if __name__ == "__main__":
     print(get_all_cards())

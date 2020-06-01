@@ -35,8 +35,8 @@ class Room:
     def begin(self):
         print('game begin')
         self.init_cards_stack()
-        for p in self.players_pool:
-            p.init_player()
+        for n, p in enumerate(self.players_pool):
+            p.init_player(n)
             p.send_msg('game begin')
 
     def send_all_players(self, msg):
@@ -53,6 +53,7 @@ def create_room(client_num, room_id):
 def join_room(room_id, client):
     player = rooms[room_id].add_client(client)
     return player
+
 
 def get_room_id():
     return len(rooms)+1

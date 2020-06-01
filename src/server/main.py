@@ -18,6 +18,9 @@ parser.add_argument("--show-type")
 parser.add_argument("--left-stack", "-l", type=int)
 parser.add_argument("--middle-stack", "-m", type=int)
 parser.add_argument("--right-stack", "-r", type=int)
+parser.add_argument("--card-num", type=int)
+parser.add_argument("--player-num", type=int)
+parser.add_argument("--msg")
 
 
 def init():
